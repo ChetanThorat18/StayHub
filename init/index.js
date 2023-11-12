@@ -10,7 +10,8 @@ main().then(()=>{
 })
 // connect to mongoDB 
 async function main(){
-    await mongoose.connect('mongodb://127.0.0.1:27017/Project');
+    await mongoose.connect('mongodb+srv://ChetanThorat18:MongoAtlas%40123@myproject.qung7za.mongodb.net/StayHub');
+    
 }
 
 // initialize database (delete Existing data if any)
