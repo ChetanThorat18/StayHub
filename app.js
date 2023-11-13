@@ -2,11 +2,13 @@ const express  = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const Listing = require("./models/listing.js");
+const methodOverride = require("method-override");
 
 const path = require("path");
 app.set("view engine","ejs");
 app.set("views",path.join(__dirname,"views"));
 app.use(express.urlencoded({extended:true}));
+app.use(methodOverride("_method"));
 
 main().then(()=>{
     console.log("connected to database!");
@@ -42,6 +44,20 @@ app.post("/listings",async (req,res)=>{
     const newListing = new Listing(listing);
     await newListing.save();
     res.redirect("/listings");
+})
+
+//Edit and Update Route For Listing
+// Edit ---> GET request at /listings/:id/edit from show.ejs to render edit form
+// Update ---> PUT request at /listings/:id to Update Database
+app.get("/listings/:id/edit",async (req,res)=>{
+    let {id} = req.params;
+    const currentListing = await Listing.findById(id);
+    res.render("listings/edit.ejs" , {currentListing});
+});
+app.put("/listings/:id",async (req,res)=>{
+    let {id}=req.params;
+    await Listing.findByIdAndUpdate(id,{...req.body.listing});
+    res.redirect(`/listings/${id}`);
 })
 
 // Show route( GET request at /listings/:id FROM views/listings/index.ejs )
