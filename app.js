@@ -29,6 +29,21 @@ app.get("/listings",async (req,res)=>{
     res.render("listings/index.ejs",{allListings});
 });
 
+// New and Create Route for Listing
+// New ---> GET request at /listings/new to collect Form data
+// Create ---> POST request at /listings to add form data to database
+app.get("/listings/new",(req,res)=>{
+    res.render("listings/new.ejs");
+})
+app.post("/listings",async (req,res)=>{
+    // let {title,description,image,price,country,location} = req.body;
+    let listing = req.body.listing;
+    // create instance of collection Listing to add it in database
+    const newListing = new Listing(listing);
+    await newListing.save();
+    res.redirect("/listings");
+})
+
 // Show route( GET request at /listings/:id FROM views/listings/index.ejs )
 app.get("/listings/:id",async (req,res)=>{
     let { id } =req.params;
