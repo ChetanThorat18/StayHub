@@ -60,6 +60,14 @@ app.put("/listings/:id",async (req,res)=>{
     res.redirect(`/listings/${id}`);
 })
 
+// Delete Route for Listing --> DELETE request at /listings/:id From show.ejs 
+app.delete("/listings/:id",async (req,res)=>{
+    const {id} = req.params;
+   let deletedListing = await Listing.findByIdAndDelete(id);
+   console.log(deletedListing);
+   res.redirect("/listings");
+})
+
 // Show route( GET request at /listings/:id FROM views/listings/index.ejs )
 app.get("/listings/:id",async (req,res)=>{
     let { id } =req.params;
