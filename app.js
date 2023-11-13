@@ -6,7 +6,7 @@ const Listing = require("./models/listing.js");
 const path = require("path");
 app.set("view engine","ejs");
 app.set("views",path.join(__dirname,"views"));
-app.use(express.urlencoded({extended:true}));
+
 
 main().then(()=>{
     console.log("connected to database!");
@@ -28,13 +28,6 @@ app.get("/listings",async (req,res)=>{
     const allListings = await Listing.find({});
     res.render("listings/index.ejs",{allListings});
 });
-
-// Show route( GET request at /listings/:id FROM views/listings/index.ejs )
-app.get("/listings/:id",async (req,res)=>{
-    let { id } =req.params;
-    const currentListing = await Listing.findById(id);
-    res.render("listings/show.ejs",{currentListing});
-})
 
 // start the server
 app.listen(8080,(req,res)=>{
