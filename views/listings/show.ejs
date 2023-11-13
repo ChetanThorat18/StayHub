@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StayHub</title>
+</head>
+<body>
+    <h3>Listing Details..!</h3>
+    <ul>
+      <li><%= currentListing.title %></li>
+      <li><%= currentListing.description %></li>
+      <li> &#8377; <%= currentListing.price.toLocaleString("en-IN") %></li>
+      <li><%= currentListing.location %></li>
+      <li><%= currentListing.country %></li>
+    </ul>
+</body>
+</html>
