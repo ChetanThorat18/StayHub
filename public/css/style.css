@@ -87,7 +87,7 @@ body{
     background-color: white;
 }
 
-.add-btn{
+.add-btn,.edit-btn{
     background-color: #fe424d;
     border: none !important;
 }
