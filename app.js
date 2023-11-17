@@ -7,6 +7,7 @@ const path = require("path");
 const ejsMate = require("ejs-mate");
 const wrapAsync = require("./utils/wrapAsync.js");
 const ExpressError = require("./utils/ExpressError.js");
+const {listingSchema} = require("./schema.js");
 
 app.set("view engine","ejs");
 app.set("views",path.join(__dirname,"views"));
@@ -29,6 +30,17 @@ async function main(){
 app.get("/",(req,res)=>{
     res.send("Root directory working..!");
 });
+ 
+// middleware function to be used as a parameter in routes
+const validateListing = (req,res,next)=>{
+    const result = listingSchema.validate(req.body);
+    if(result.error){
+        //let errMsg = error.details.map((el)=> el.message).join(",");
+        throw new ExpressError(400,result.error);
+    }else{
+        next();
+    }
+}
 
 // index route
 app.get("/listings",wrapAsync(async (req,res)=>{
@@ -42,11 +54,9 @@ app.get("/listings",wrapAsync(async (req,res)=>{
 app.get("/listings/new",(req,res)=>{
     res.render("listings/new.ejs");
 })
-app.post("/listings", wrapAsync(async (req,res)=>{
+app.post("/listings",validateListing ,wrapAsync(async (req,res)=>{
     // let {title,description,image,price,country,location} = req.body;
-    if(!req.body.listing){
-        throw new ExpressError(400,"Send valid data for listing");
-    }
+    
     let listing = req.body.listing;
     // create instance of collection Listing to add it in database
     const newListing = new Listing(listing);
@@ -62,7 +72,7 @@ app.get("/listings/:id/edit",wrapAsync(async (req,res)=>{
     const currentListing = await Listing.findById(id);
     res.render("listings/edit.ejs" , {currentListing});
 }));
-app.put("/listings/:id",wrapAsync(async (req,res)=>{
+app.put("/listings/:id",validateListing,wrapAsync(async (req,res)=>{
     if(!req.body.listing){
         throw new ExpressError(400,"Send valid data for listing");
     }
