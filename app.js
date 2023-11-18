@@ -7,7 +7,7 @@ const path = require("path");
 const ejsMate = require("ejs-mate");
 const wrapAsync = require("./utils/wrapAsync.js");
 const ExpressError = require("./utils/ExpressError.js");
-const {listingSchema} = require("./schema.js");
+const {listingSchema,reviewSchema} = require("./schema.js");
 const Review = require("./models/review.js");
 
 app.set("view engine","ejs");
@@ -35,6 +35,17 @@ app.get("/",(req,res)=>{
 // middleware function to be used as a parameter in routes
 const validateListing = (req,res,next)=>{
     const result = listingSchema.validate(req.body);
+    if(result.error){
+        //let errMsg = error.details.map((el)=> el.message).join(",");
+        throw new ExpressError(400,result.error);
+    }else{
+        next();
+    }
+}
+
+// middleware function to be used as a parameter in routes
+const validateReview = (req,res,next)=>{
+    const result = reviewSchema.validate(req.body);
     if(result.error){
         //let errMsg = error.details.map((el)=> el.message).join(",");
         throw new ExpressError(400,result.error);
@@ -99,7 +110,7 @@ app.get("/listings/:id",wrapAsync(async (req,res)=>{
 
 // Reviews
 // Reviews POST Route
-app.post("/listings/:id/reviews" ,async (req,res)=>{
+app.post("/listings/:id/reviews",validateReview ,wrapAsync(async (req,res)=>{
     let listing = await Listing.findById(req.params.id);
     let newReview = new Review(req.body.review); 
     listing.reviews.push(newReview);
@@ -107,8 +118,8 @@ app.post("/listings/:id/reviews" ,async (req,res)=>{
     await listing.save();
 
     res.send("new review saved");
-    console.log("new review saved");
-})
+    console.log("new review saved"); 
+}))
 
 // Error Handling Middleware for Invalid Route(If req doesn't match to any of above route)
 app.use("*",(req,res,next)=>{
