@@ -104,7 +104,7 @@ app.delete("/listings/:id",wrapAsync(async (req,res)=>{
 // Show route( GET request at /listings/:id FROM views/listings/index.ejs )
 app.get("/listings/:id",wrapAsync(async (req,res)=>{
     let { id } =req.params;
-    const currentListing = await Listing.findById(id);
+    const currentListing = await Listing.findById(id).populate("reviews");
     res.render("listings/show.ejs",{currentListing});
 }))
 
@@ -117,8 +117,8 @@ app.post("/listings/:id/reviews",validateReview ,wrapAsync(async (req,res)=>{
     await newReview.save();
     await listing.save();
 
-    res.send("new review saved");
-    console.log("new review saved"); 
+    res.redirect(`/listings/${req.params.id}`);
+
 }))
 
 // Error Handling Middleware for Invalid Route(If req doesn't match to any of above route)
@@ -135,4 +135,4 @@ app.use((err,req,res,next)=>{
 // start the server
 app.listen(8080,(req,res)=>{
     console.log("server is listening at port 8080");
-});
+}); 
