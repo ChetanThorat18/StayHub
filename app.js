@@ -117,8 +117,18 @@ app.post("/listings/:id/reviews",validateReview ,wrapAsync(async (req,res)=>{
     await newReview.save();
     await listing.save();
 
-    res.redirect(`/listings/${req.params.id}`);
+    res.redirect(`/listings/${listing._id}`);
 
+}))
+
+// DELETE review route
+app.delete("/listings/:id/reviews/:reviewId", wrapAsync(async (req,res)=>{
+    let {id,reviewId} = req.params;
+
+    await Listing.findByIdAndUpdate(id,{$pull:{reviews:reviewId}});
+    await Review.findByIdAndDelete(reviewId);
+    
+    res.redirect(`/listings/${id}`);
 }))
 
 // Error Handling Middleware for Invalid Route(If req doesn't match to any of above route)
