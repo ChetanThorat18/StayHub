@@ -5,6 +5,8 @@ const methodOverride = require("method-override");
 const path = require("path");
 const ejsMate = require("ejs-mate");
 const ExpressError = require("./utils/ExpressError.js");
+const session = require("express-session");
+const flash = require("connect-flash");
 
 const listings = require("./routes/listing.js"); 
 const reviews = require("./routes/review.js");
@@ -15,6 +17,20 @@ app.use(express.urlencoded({extended:true}));
 app.use(methodOverride("_method"));
 app.engine("ejs",ejsMate);
 app.use(express.static(path.join(__dirname,"/public")));
+
+// session options to be passed to session() 
+const sessionOptions = {
+    secret : "mysecretcode",
+    resave : false,
+    saveUninitialized : true,
+    cookie:{
+        expires:Date.now() + 7*24*60*60*1000, // 7 days , 24 hrs(each day) , 60 min(each hour) , 60 sec(each min) , 1000ms (of each sec)
+        maxAge:7*24*60*60*1000,
+        httpOnly:true
+    }
+};
+app.use(session(sessionOptions));
+app.use(flash());
 
 main().then(()=>{
     console.log("connected to database!");
@@ -29,7 +45,14 @@ async function main(){
 app.get("/",(req,res)=>{
     res.send("Root directory working..!");
 });
- 
+
+// Flash-message middleware
+app.use((req,res,next)=>{
+    res.locals.success = req.flash("success");
+    res.locals.error = req.flash("error");
+    next();
+});
+
 // Refer to listings in routes/listing.js for all those routes with /listings
 app.use("/listings",listings);
 // Refer to reviews in routes/review.js for all those routes with /listings/:id/reviews

@@ -13,6 +13,7 @@ const validateListing = (req,res,next)=>{
         //let errMsg = error.details.map((el)=> el.message).join(",");
         throw new ExpressError(400,result.error);
     }else{
+        req.flash("success","New Listing Created!");   // Flash message ();
         next();
     }
 }
@@ -38,6 +39,7 @@ router.post("/",validateListing ,wrapAsync(async (req,res)=>{
     // create instance of collection Listing to add it in database
     const newListing = new Listing(listing);
     await newListing.save();
+    req.flash("success","New Listing Created!");   // Flash message 
     res.redirect("/listings");
 }))
 
@@ -47,6 +49,10 @@ router.post("/",validateListing ,wrapAsync(async (req,res)=>{
 router.get("/:id/edit",wrapAsync(async (req,res)=>{
     let {id} = req.params;
     const currentListing = await Listing.findById(id);
+    if(! currentListing){
+        req.flash("error","Listing You requested for does not exist!");   // Flash message 
+        res.redirect("/listings");
+    }
     res.render("listings/edit.ejs" , {currentListing});
 }));
 router.put("/:id",validateListing,wrapAsync(async (req,res)=>{
@@ -55,6 +61,7 @@ router.put("/:id",validateListing,wrapAsync(async (req,res)=>{
     }
     let {id}=req.params;
     await Listing.findByIdAndUpdate(id,{...req.body.listing});
+    req.flash("success","Listing Updated!");   // Flash message 
     res.redirect(`/listings/${id}`);
 }))
 
@@ -63,6 +70,7 @@ router.delete("/:id",wrapAsync(async (req,res)=>{
     const {id} = req.params;
    let deletedListing = await Listing.findByIdAndDelete(id);
    console.log(deletedListing);
+   req.flash("success","Listing Deleted!");   // Flash message 
    res.redirect("/listings");
 }))
 
@@ -70,6 +78,11 @@ router.delete("/:id",wrapAsync(async (req,res)=>{
 router.get("/:id",wrapAsync(async (req,res)=>{
     let { id } =req.params;
     const currentListing = await Listing.findById(id).populate("reviews");
+
+    if(! currentListing){
+        req.flash("error","Listing You requested for does not exist!");   // Flash message 
+        res.redirect("/listings");
+    }
     res.render("listings/show.ejs",{currentListing});
 }))
 
