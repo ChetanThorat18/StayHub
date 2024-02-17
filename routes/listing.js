@@ -5,6 +5,7 @@ const wrapAsync = require("../utils/wrapAsync.js");
 const {listingSchema} = require("../schema.js");
 const ExpressError = require("../utils/ExpressError.js");
 const Listing = require("../models/listing.js");
+const { isLoggedIn } = require("../middleware.js");
 
 // middleware function to be used as a parameter in routes
 const validateListing = (req,res,next)=>{
@@ -29,10 +30,10 @@ router.get("/",wrapAsync(async (req,res)=>{
 // New and Create Route for Listing
 // New ---> GET request at /listings/new to collect Form data
 // Create ---> POST request at /listings to add form data to database
-router.get("/new",(req,res)=>{
+router.get("/new",isLoggedIn,(req,res)=>{
     res.render("listings/new.ejs");
 })
-router.post("/",validateListing ,wrapAsync(async (req,res)=>{
+router.post("/",isLoggedIn,validateListing ,wrapAsync(async (req,res)=>{
     // let {title,description,image,price,country,location} = req.body;
     
     let listing = req.body.listing;
@@ -46,7 +47,8 @@ router.post("/",validateListing ,wrapAsync(async (req,res)=>{
 //Edit and Update Route For Listing
 // Edit ---> GET request at /listings/:id/edit from show.ejs to render edit form
 // Update ---> PUT request at /listings/:id to Update Database
-router.get("/:id/edit",wrapAsync(async (req,res)=>{
+router.get("/:id/edit",isLoggedIn,wrapAsync(async (req,res)=>{
+    console.log("This is Edit Route");
     let {id} = req.params;
     const currentListing = await Listing.findById(id);
     if(! currentListing){
@@ -55,7 +57,7 @@ router.get("/:id/edit",wrapAsync(async (req,res)=>{
     }
     res.render("listings/edit.ejs" , {currentListing});
 }));
-router.put("/:id",validateListing,wrapAsync(async (req,res)=>{
+router.put("/:id",isLoggedIn,validateListing,wrapAsync(async (req,res)=>{
     if(!req.body.listing){
         throw new ExpressError(400,"Send valid data for listing");
     }
@@ -66,7 +68,7 @@ router.put("/:id",validateListing,wrapAsync(async (req,res)=>{
 }))
 
 // Delete Route for Listing --> DELETE request at /listings/:id From show.ejs 
-router.delete("/:id",wrapAsync(async (req,res)=>{
+router.delete("/:id",isLoggedIn,wrapAsync(async (req,res)=>{
     const {id} = req.params;
    let deletedListing = await Listing.findByIdAndDelete(id);
    console.log(deletedListing);
