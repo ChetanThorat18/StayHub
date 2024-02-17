@@ -7,9 +7,13 @@ const ejsMate = require("ejs-mate");
 const ExpressError = require("./utils/ExpressError.js");
 const session = require("express-session");
 const flash = require("connect-flash");
+const passport = require("passport");
+const localStrategy = require("passport-local");
+const User = require("./models/user.js");
 
-const listings = require("./routes/listing.js"); 
-const reviews = require("./routes/review.js");
+const listingsRouter = require("./routes/listing.js"); 
+const reviewsRouter = require("./routes/review.js");
+const userRouter = require("./routes/user.js"); 
 
 app.set("view engine","ejs");
 app.set("views",path.join(__dirname,"views"));
@@ -32,6 +36,13 @@ const sessionOptions = {
 app.use(session(sessionOptions));
 app.use(flash());
 
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new localStrategy(User.authenticate()));
+
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
 main().then(()=>{
     console.log("connected to database!");
 }).catch((err)=>{
@@ -53,10 +64,12 @@ app.use((req,res,next)=>{
     next();
 });
 
-// Refer to listings in routes/listing.js for all those routes with /listings
-app.use("/listings",listings);
-// Refer to reviews in routes/review.js for all those routes with /listings/:id/reviews
-app.use("/listings/:id/reviews",reviews);
+// Refer to listingsRouter in routes/listing.js for all those routes with /listings
+app.use("/listings",listingsRouter);
+// Refer to reviewsRouter in routes/review.js for all those routes with /listings/:id/reviews
+app.use("/listings/:id/reviews",reviewsRouter);
+app.use("/",userRouter);
+ 
 
 // Error Handling Middleware for Invalid Route(If req doesn't match to any of above route)
 app.use("*",(req,res,next)=>{
