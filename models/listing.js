@@ -23,7 +23,11 @@ const listingSchema = new Schema({
             type:Schema.Types.ObjectId,
             ref:"Review"
         }
-    ]
+    ],
+    owner:{
+        type:Schema.Types.ObjectId,
+        ref:"User",
+    },
 });
 
 // POST middleware to DELETE corresponding reviews from database upon deleting the listing
