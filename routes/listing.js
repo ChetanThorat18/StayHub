@@ -15,31 +15,31 @@ const {
 
 // All /listings related routes
 
-// index route
-router.get("/", wrapAsync(index));
-
-// New and Create Route for Listing
-// New ---> GET request at /listings/new to collect Form data
+// index route (GET "/")
 // Create ---> POST request at /listings to add form data to database
+router
+  .route("/")
+  .get(wrapAsync(index))
+  .post(isLoggedIn, validateListing, wrapAsync(createListing));
+
+
+// New ---> GET request at /listings/new to collect Form data
 router.get("/new", isLoggedIn, renderNewForm);
-router.post("/", isLoggedIn, validateListing, wrapAsync(createListing));
+
+
+// Update ---> PUT request at /listings/:id to Update Database
+// Delete Route for Listing --> DELETE request at /listings/:id From show.ejs
+// Show route( GET request at /listings/:id FROM views/listings/index.ejs )
+router
+  .route("/:id")
+  .put( isLoggedIn, isOwner, validateListing, wrapAsync(editListing))
+  .delete(isLoggedIn, isOwner, wrapAsync(deleteListing))
+  .get(wrapAsync(showListing))
+  
 
 //Edit and Update Route For Listing
 // Edit ---> GET request at /listings/:id/edit from show.ejs to render edit form
-// Update ---> PUT request at /listings/:id to Update Database
 router.get("/:id/edit", isLoggedIn, isOwner, wrapAsync(renderEditForm));
-router.put(
-  "/:id",
-  isLoggedIn,
-  isOwner,
-  validateListing,
-  wrapAsync(editListing)
-);
 
-// Delete Route for Listing --> DELETE request at /listings/:id From show.ejs
-router.delete("/:id", isLoggedIn, isOwner, wrapAsync(deleteListing));
-
-// Show route( GET request at /listings/:id FROM views/listings/index.ejs )
-router.get("/:id", wrapAsync(showListing));
 
 module.exports = router;
