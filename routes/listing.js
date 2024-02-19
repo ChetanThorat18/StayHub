@@ -37,7 +37,7 @@ router.get("/new", isLoggedIn, renderNewForm);
 // Show route( GET request at /listings/:id FROM views/listings/index.ejs )
 router
   .route("/:id")
-  .put(isLoggedIn, isOwner, validateListing, wrapAsync(editListing))
+  .put(isLoggedIn, isOwner,  upload.single("listing[image]"),validateListing, wrapAsync(editListing))
   .delete(isLoggedIn, isOwner, wrapAsync(deleteListing))
   .get(wrapAsync(showListing));
 
