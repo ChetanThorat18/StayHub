@@ -143,3 +143,24 @@ body{
     align-items: center;
     margin-bottom: 0.8rem;
   }
+
+/* Search Button */
+.btn-search{
+    background-color: #fe424d;
+    color: white;
+    border-radius: 15px;
+    padding: 0 1rem 0 1rem;
+}
+.btn-search:hover{
+    background-color: #fe424d;
+    color: white;
+}
+.btn-search i{
+    display: inline;
+    margin-right:0.5rem ;
+}
+.search-input{
+    border-radius: 15px;
+    padding: 0.5rem 3rem 0.5rem 3rem;
+    font-size: 1rem;
+}
