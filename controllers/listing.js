@@ -53,7 +53,13 @@ module.exports.renderEditForm = async (req, res) => {
     req.flash("error", "Listing You requested for does not exist!");
     res.redirect("/listings");
   }
-  res.render("listings/edit.ejs", { currentListing });
+
+  // Old Image Preview in Edit form
+  // /upload/h_200,w_250 ==> cloudinary built-in API for reducing picture quality 
+  let originalImageUrl = currentListing.image.url;
+  originalImageUrl = originalImageUrl.replace("/upload","/upload/h_100,w_250");
+
+  res.render("listings/edit.ejs", { currentListing ,originalImageUrl});
 };
 
 module.exports.editListing = async (req, res) => {
