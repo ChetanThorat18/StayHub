@@ -1,4 +1,7 @@
 {
+    "engine":{
+      "node": "21.5.0"
+    },
   "name": "stayhub",
   "version": "1.0.0",
   "description": "",

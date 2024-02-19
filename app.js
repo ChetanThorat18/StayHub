@@ -33,7 +33,7 @@ const Atlas_DB_URL = process.env.MONGO_ATLAS_URL;
 const store = MongoStore.create({
     mongoUrl : Atlas_DB_URL,
     crypto:{
-        secret: "mysecretcode"
+        secret:  process.env.SESSION_SECRET 
     },
     touchAfter:24*3600,
 })
@@ -45,7 +45,7 @@ store.on("error",()=>{
 // session options to be passed to session() 
 const sessionOptions = {
     store,
-    secret : "mysecretcode",
+    secret : process.env.SESSION_SECRET,
     resave : false,
     saveUninitialized : true,
     cookie:{
