@@ -10,6 +10,7 @@ const path = require("path");
 const ejsMate = require("ejs-mate");
 const ExpressError = require("./utils/ExpressError.js");
 const session = require("express-session");
+const MongoStore = require('connect-mongo');
 const flash = require("connect-flash");
 const passport = require("passport");
 const localStrategy = require("passport-local");
@@ -26,8 +27,24 @@ app.use(methodOverride("_method"));
 app.engine("ejs",ejsMate);
 app.use(express.static(path.join(__dirname,"/public")));
 
+const Atlas_DB_URL = process.env.MONGO_ATLAS_URL;
+
+// Mongo Session
+const store = MongoStore.create({
+    mongoUrl : Atlas_DB_URL,
+    crypto:{
+        secret: "mysecretcode"
+    },
+    touchAfter:24*3600,
+})
+ 
+store.on("error",()=>{
+    console.log("Error in Mongo-Session Store",err);
+})
+
 // session options to be passed to session() 
 const sessionOptions = {
+    store,
     secret : "mysecretcode",
     resave : false,
     saveUninitialized : true,
@@ -54,12 +71,8 @@ main().then(()=>{
 })
 // connect to mongoDB Atlas
 async function main(){
-    await mongoose.connect('mongodb+srv://ChetanThorat18:MongoAtlas%40123@myproject.qung7za.mongodb.net/StayHub');
+    await mongoose.connect(Atlas_DB_URL);
 }
-
-// app.get("/",(req,res)=>{
-//     res.send("Root directory working..!");
-// });
 
 // Flash-message middleware
 app.use((req,res,next)=>{
