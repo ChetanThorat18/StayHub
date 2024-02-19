@@ -57,9 +57,9 @@ async function main(){
     await mongoose.connect('mongodb+srv://ChetanThorat18:MongoAtlas%40123@myproject.qung7za.mongodb.net/StayHub');
 }
 
-app.get("/",(req,res)=>{
-    res.send("Root directory working..!");
-});
+// app.get("/",(req,res)=>{
+//     res.send("Root directory working..!");
+// });
 
 // Flash-message middleware
 app.use((req,res,next)=>{
