@@ -110,19 +110,39 @@ body{
 #filters {
     margin-top: 1rem;
     display: flex;
-    flex-wrap: wrap;
     margin-top: 1rem;
-    justify-content: center;
-    justify-content: baseline;
+    /* justify-content: center; */
     align-items: center;
+    overflow-x: auto;
+    flex-wrap: nowrap; 
+    -webkit-overflow-scrolling: touch; 
+    padding: 0 20px; 
   }
 
   .filter {
     text-align: center;
-    margin-right: 2rem;
     opacity: 0.7;
+    flex: 0 0 auto;
+    margin-right: 10px; 
+    padding: 10px; 
+    border-radius: 5px; 
+    display: inline-block; 
+    margin-right: 10px; 
   }
 
+  @media (min-width: 768px) {
+    #filters {
+      justify-content: center; /* Center the filters */
+    }
+  }
+
+
+  @media screen and (max-width: 768px) {
+    #filters {
+      flex-wrap: nowrap; /* Force single row */
+    }
+  }
+/*  */
   .filter:hover {
     opacity: 1;
     cursor: pointer;
@@ -142,6 +162,7 @@ body{
     display: flex;
     align-items: center;
     margin-bottom: 0.8rem;
+    padding: 1rem 1rem 2.5rem 1rem;
   }
 
 /* Search Button */
@@ -161,6 +182,14 @@ body{
 }
 .search-input{
     border-radius: 15px;
-    padding: 0.5rem 3rem 0.5rem 3rem;
+    padding: 0.5rem 2rem 0.5rem 2rem;
     font-size: 1rem;
+    width: calc(100% - 40px);
 }
+.navbar-toggler:focus + #navbarNavAltMarkup,
+.navbar-toggler:active + #navbarNavAltMarkup,
+.navbar-collapse.show {
+  background-color: #f8f9fa; /* Change the background color as needed */
+  padding: 10px; /* Optional: Add padding to the navbar content */
+}
+

@@ -10,11 +10,12 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-      <div class="navbar-nav">
+      <div class="navbar-nav me-auto mb-2 mb-md-0">
         <a class="nav-link" href="/listings">Explore</a>
+        <a class="nav-link" href="/listings/new">Airbnb your home</a>
       </div>
       <!-- Serach Option -->
-      <form class="d-flex navbar-nav ms-auto">
+      <form class="d-flex navbar-nav">
         <div class="input-group">
           <input class="form-control me-2 search-input" type="search" placeholder="Search destination" aria-label="Search">
           <button class="btn btn-search" type="submit">
@@ -22,16 +23,14 @@
           </button>
         </div>
       </form>
-      
-      
       <div class="navbar-nav ms-auto">
-        <a class="nav-link" href="/listings/new">Airbnb your home</a>
-        <% if(! currUser){ %>
+        <% if(!currUser){ %>
         <a class="nav-link" href="/signup"><b>Sign Up</b></a>
         <a class="nav-link" href="/login"><b>Log In</b></a>
-        <% } %> <% if(currUser) { %>
+        <% } %> 
+        <% if(currUser) { %>
         <a class="nav-link" href="/logout"><b>Logout</b></a>
-        <%}%>
+        <% } %>
       </div>
     </div>
   </div>

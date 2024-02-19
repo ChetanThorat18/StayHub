@@ -1,6 +1,6 @@
 <% layout("/layouts/boilerplate") %>
 <!-- Filters -->
-<div id="filters">
+<div id="filters" class="d-flex overflow-auto">
   <div class="filter">
     <div>
       <i class="fa-solid fa-fire"></i>
@@ -73,21 +73,20 @@
     </div>
     <p>Boats</p>
   </div>
-
   <!-- Tax Switch Toggle -->
-  <div class="tax-toggle">
-    <div class="form-check-reverse form-switch">
-      <input
+  <div class="tax-toggle d-none d-md-block  d-flex align-items-center">
+      <div class="form-check-reverse form-switch">
+        <input
         class="form-check-input"
         type="checkbox"
         role="switch"
         id="flexSwitchCheckDefault"
-      />
-      <label class="form-check-label" for="flexSwitchCheckDefault"
+        />
+        <label class="form-check-label" for="flexSwitchCheckDefault"
         >Display total after taxes</label
-      >
+        >
+      </div>
     </div>
-  </div>
 </div>
 
 <!-- Row container -->
@@ -125,7 +124,7 @@
     for (eachInfo of taxInfo) {
       if (eachInfo.style.display != "inline") {
         eachInfo.style.display = "inline";
-      }else{
+      } else {
         eachInfo.style.display = "none";
       }
     }
