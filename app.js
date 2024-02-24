@@ -101,6 +101,6 @@ app.use((err,req,res,next)=>{
 })
 
 // start the server
-app.listen(8080,(req,res)=>{
+app.listen(3000,(req,res)=>{
     console.log("server is listening at port 8080");
 }); 
